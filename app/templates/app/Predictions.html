@@ -1,0 +1,37 @@
+{% extends "app/base.html" %}
+{% block content %}
+    <div class="container">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                <div class="navbar-nav">
+                    <a class="nav-item nav-link" href="/dashboard/">Dashboard</a>
+                    {% if time.hour >= 14 %}
+                        <a class="nav-item nav-link active" href="/predictions/">Predictions</a>
+                    {% else %}
+                        <a class="nav-item nav-link disabled" href="/predictions/">Predictions</a>
+                    {% endif %}
+                    <a class="nav-item nav-link" href="/finalsprediction/">Final Teams Prediction</a>
+                    <a class="nav-item nav-link" href="/leaderboard/">leaderboard</a>
+                    <a class="nav-item nav-link" href="/logout/">Logout</a>
+                </div>
+            </div>
+        </nav>
+        {% for match, predictions in matches.items %}
+            <div class="card" style="width: 100%;">
+                <div class="card-body">
+                {% if match.team_1_score and match.team_1_score %}
+                    <h5 class="card-title">Match {{ forloop.counter }} - {{ match.team_1.name }} {{ match.team_1_score }}
+                        vs {{ match.team_2_score }} {{ match.team_2.name }}</h5>
+                {% else %}
+                    <h5 class="card-title">Match {{ forloop.counter }} - {{ match.team_1.name }} -
+                        vs - {{ match.team_2.name }}</h5>
+                {% endif %}
+                    {% for prediction in predictions %}
+                        <p class="card-text">{{ prediction.user.username }}: {{ prediction.team_1_score }}
+                            - {{ prediction.team_2_score }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

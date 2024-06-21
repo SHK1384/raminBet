@@ -1,0 +1,38 @@
+{% extends "app/base.html" %}
+{% block content %}
+    <div class="container">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                <div class="navbar-nav">
+                    <a class="nav-item nav-link" href="/dashboard/">Dashboard</a>
+                    {% if time.hour >= 14 %}
+                        <a class="nav-item nav-link active" href="/predictions/">Predictions</a>
+                    {% else %}
+                        <a class="nav-item nav-link disabled" href="/predictions/">Predictions</a>
+                    {% endif %}
+                    <a class="nav-item nav-link" href="/finalsprediction/">Final Teams Prediction</a>
+                    <a class="nav-item nav-link" href="/leaderboard/">leaderboard</a>
+                    <a class="nav-item nav-link" href="/logout/">Logout</a>
+                </div>
+            </div>
+        </nav>
+        <h2>Predict</h2>
+        <h3>Team 1: {{ team_1_name }} VS Team 2: {{ team_2_name }}</h3>
+        <form method="post">
+            {% csrf_token %}
+            {% for field in form %}
+                <p>
+                    {{ field.label_tag }}<br>
+                    {{ field }}
+                    {% if field.help_text %}
+                        <small style="color: grey">{{ field.help_text }}</small>
+                    {% endif %}
+                    {% for error in field.errors %}
+                        <p style="color: red">{{ error }}</p>
+                    {% endfor %}
+                </p>
+            {% endfor %}
+            <button class="btn btn-dark" type="submit">Submit</button>
+        </form>
+    </div>
+{% endblock %}

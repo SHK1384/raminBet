@@ -1,0 +1,74 @@
+{% extends "app/base.html" %}
+{% block content %}
+    <div class="container">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                <div class="navbar-nav">
+                    <a class="nav-item nav-link active" href="/dashboard/">Dashboard</a>
+                    {% if time.hour >= 14 %}
+                        <a class="nav-item nav-link" href="/predictions/">Predictions</a>
+                    {% else %}
+                        <a class="nav-item nav-link disabled" href="/predictions/">Predictions</a>
+                    {% endif %}
+                    <a class="nav-item nav-link" href="/finalsprediction/">Final Teams Prediction</a>
+                    <a class="nav-item nav-link" href="/leaderboard/">leaderboard</a>
+                    <a class="nav-item nav-link" href="/logout/">Logout</a>
+                </div>
+            </div>
+        </nav>
+        <h2>Username: {{ user.username }}</h2>
+        <h2>Score: {{ user.score }}</h2>
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Team 1</th>
+                <th scope="col"></th>
+                <th scope="col"></th>
+                <th scope="col"></th>
+                <th scope="col">Team 2</th>
+                <th scope="col">Bet</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for match, prediction in matches.items %}
+                <tr>
+                    <th scope="row">{{ forloop.counter }}</th>
+                    <td>{{ match.team_1.name }}</td>
+                    <td>
+                        {% if prediction %}
+                            ({{ prediction.team_1_score }})
+                        {% endif %}
+                        {% if match.team_1_score != None %}
+                            {{ match.team_1_score }}
+                        {% else %}
+                            -
+                        {% endif %}
+                    </td>
+                    <td>vs</td>
+                    <td>
+                        {% if prediction %}
+                            ({{ prediction.team_2_score }})
+                        {% endif %}
+                        {% if match.team_2_score != None %}
+                            {{ match.team_2_score }}
+                        {% else %}
+                            -
+                        {% endif %}
+                    </td>
+                    <td>{{ match.team_2.name }}</td>
+                    {% if time.hour >= 14 %}
+                        <td><a class="btn btn-dark disabled"
+                               href="/predict/{{ match.id }}/{{ match.team_1.name }}/{{ match.team_2.name }}/">Bet</a>
+                        </td>
+                    {% else %}
+                        <td><a class="btn btn-dark"
+                               href="/predict/{{ match.id }}/{{ match.team_1.name }}/{{ match.team_2.name }}/">Bet</a>
+                        </td>
+                    {% endif %}
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
